@@ -1,0 +1,36 @@
+# postgres
+import psycopg2
+import traceback
+import logging
+from sqlalchemy import create_engine
+
+# pandas
+import pandas as pd
+
+# Specify the file path and file name
+file_path = 'D:/Vina/1_Other project/Freelance/Task_sample/04_PwC/'
+file1_name = '1_PurchasesFINAL12312016.csv'
+
+# Read the CSV file into a DataFrame
+PurchasesDec = pd.read_csv(file_path + file1_name)
+
+# Define the PostgreSQL connection parameters
+db_params = {
+    'dbname': "postgres",
+    'user': "postgres",
+    'password': 12345,
+    'host': 'localhost',  # Replace with your host
+    'port': '5432',  # Replace with your port
+}
+
+# Establish a connection to the PostgreSQL database
+engine = create_engine(f'postgresql://{db_params["user"]}:{db_params["password"]}@{db_params["host"]}:{db_params["port"]}/{db_params["dbname"]}')
+
+# Define the PostgreSQL table name
+table_name = 'data_pandas'
+
+# Use pandas to_sql to write the DataFrame to the PostgreSQL table
+PurchasesDec.to_sql(table_name, engine, if_exists='replace', index=False)
+
+# Close the database connection
+engine.dispose()
